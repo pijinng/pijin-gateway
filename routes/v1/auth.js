@@ -33,7 +33,23 @@ router.post('/signup', async (req, res) => {
     const user = JSON.parse(userData.data);
 
     await AuthRPC.createAuthorization({ userID: user._id, password });
-    res.json({ success: true, data: user });
+
+    const token = jwt.sign(
+      {
+        _id: user._id,
+        username: user.username,
+      },
+      process.env.TOKEN_SECRET,
+      {
+        expiresIn: '30d',
+      },
+    );
+
+    res
+      .set({
+        Authorization: `Bearer ${token}`,
+      })
+      .json({ success: true, data: user });
   } catch (error) {
     console.error(error);
     if (error.code === 11000) {
@@ -85,7 +101,7 @@ router.post('/login', async (req, res) => {
 
     const token = jwt.sign(
       {
-        id: user._id,
+        _id: user._id,
         username: user.username,
       },
       process.env.TOKEN_SECRET,
@@ -126,7 +142,6 @@ router.get('/:userID', async (req, res) => {
 // Update User
 router.post('/:userID', async (req, res) => {
   const { username } = req.body;
-  const { userID } = req.params;
 
   const schema = Joi.object()
     .keys({
@@ -144,13 +159,9 @@ router.post('/:userID', async (req, res) => {
 
   try {
     const userData = await PijinRPC.updateUser({
-      id: userID,
+      id: req.user._id,
       username,
     });
-    if (!userData.data) {
-      res.status(404).json({ success: false, message: 'Not found' });
-      return;
-    }
     const user = JSON.parse(userData.data);
 
     res.json({ success: true, data: user });
