@@ -8,6 +8,7 @@ const { getUserFromToken } = require('./middleware/auth');
 
 const auth = require('./routes/v1/auth');
 const entries = require('./routes/v1/entries');
+const votes = require('./routes/v1/votes');
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.get('/v1', async (req, res) => {
 app.use('/v1/auth', auth);
 app.use(getUserFromToken);
 app.use('/v1/entries', entries);
+app.use('/v1/votes', votes);
 
 app.use((req, res) => {
   res.status(404).send({ error: 'Not found' });

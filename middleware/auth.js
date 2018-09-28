@@ -58,4 +58,28 @@ async function confirmUserCreatedEntry(req, res, next) {
   }
 }
 
-module.exports = { getUserFromToken, confirmUserCreatedEntry };
+async function confirmUserCreatedVote(req, res, next) {
+  const { voteID } = req.params;
+
+  try {
+    const voteData = await PijinRPC.getVoteByID({ id: voteID, deleted: false });
+    if (!voteData.data) {
+      res.status(404).json({ success: false, error: 'Vote not found' });
+      return;
+    }
+
+    const vote = JSON.parse(voteData.data);
+    if (vote.voter !== req.user._id) {
+      res.status(403).json({ success: false, error: 'Unauthorized to view entry' });
+      return;
+    }
+
+    req.vote = vote;
+    next();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error });
+  }
+}
+
+module.exports = { getUserFromToken, confirmUserCreatedEntry, confirmUserCreatedVote };
