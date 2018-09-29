@@ -13,7 +13,7 @@ const votes = require('./routes/v1/votes');
 
 const app = express();
 
-app.use(morgan('combined'));
+if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
