@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors');
 require('dotenv').config();
+require('./util/passport');
 
 const { getUserFromToken } = require('./middleware/auth');
 
@@ -30,7 +31,7 @@ app.use('/v1/entries', entries);
 app.use('/v1/votes', votes);
 
 app.use((req, res) => {
-  res.status(404).send({ error: 'Not found' });
+  res.status(404).send({ error: 'Route not found' });
 });
 
 app.listen(process.env.GATEWAY_PORT, () => {

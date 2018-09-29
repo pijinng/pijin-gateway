@@ -2,10 +2,9 @@ const express = require('express');
 const Joi = require('joi');
 
 const { confirmUserCreatedVote } = require('../../middleware/auth');
-const proto = require('../../includes/proto');
+const { PijinRPC } = require('../../includes/proto');
 
 const router = express.Router();
-const { PijinRPC } = proto;
 
 // Create a new Vote
 router.post('/', async (req, res) => {

@@ -12,7 +12,9 @@
     "grpc-caller": "^0.9.0",
     "joi": "^13.6.0",
     "jsonwebtoken": "^8.3.0",
-    "morgan": "^1.9.1"
+    "morgan": "^1.9.1",
+    "passport": "^0.4.0",
+    "passport-facebook": "^2.1.1"
   },
   "devDependencies": {
     "eslint": "^5.6.0",
