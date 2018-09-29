@@ -1,11 +1,11 @@
 const express = require('express');
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
+const passport = require('passport');
 
-const proto = require('../../includes/proto');
+const { PijinRPC, AuthRPC } = require('../../includes/proto');
 
 const router = express.Router();
-const { PijinRPC, AuthRPC } = proto;
 
 // Signup
 router.post('/signup', async (req, res) => {
@@ -121,12 +121,30 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Get user
-router.get('/:userID', async (req, res) => {
-  const { userID } = req.params;
-
+// Login with FB
+router.get('/login/facebook', async (req, res) => {
   try {
-    const userData = await PijinRPC.getUserByID({ id: userID, deleted: false });
+    passport.authenticate('facebook', { scope: 'email', session: false })(req, res);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error });
+  }
+});
+
+// Login with FB callback
+router.get(
+  '/login/facebook/callback',
+  passport.authenticate('facebook', {
+    successRedirect: '/home',
+    failureRedirect: '/login',
+    session: false,
+  }),
+);
+
+// Get user
+router.get('/me', async (req, res) => {
+  try {
+    const userData = await PijinRPC.getUserByID({ id: req.user._id, deleted: false });
     if (!userData.data) {
       res.status(404).json({ success: false, message: 'User not found' });
       return;
@@ -140,7 +158,7 @@ router.get('/:userID', async (req, res) => {
 });
 
 // Update User
-router.post('/:userID', async (req, res) => {
+router.post('/me', async (req, res) => {
   const { username } = req.body;
 
   const schema = Joi.object()
