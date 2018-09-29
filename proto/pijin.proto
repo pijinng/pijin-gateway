@@ -1,0 +1,103 @@
+syntax = "proto3";
+
+package pijin;
+
+service Pijin {
+  rpc createUser(createUserRequest) returns(res) {};
+  rpc getAllUsers(getAllUsersRequest) returns(res) {};
+  rpc getUserByID(getByIDRequest) returns(res) {};
+  rpc updateUser(updateUserRequest) returns(res) {};
+  rpc deleteUserByID(onlyIDRequest) returns(res) {};
+  rpc getUserByUsername(getByUsernameRequest) returns(res) {};
+
+  rpc createEntry(createEntryRequest) returns(res) {};
+  rpc getAllEntries(getAllEntriesRequest) returns(res) {};
+  rpc getEntryByID(getByIDRequest) returns(res) {};
+  rpc updateEntry(updateEntryRequest) returns(res) {};
+  rpc deleteEntryByID(onlyIDRequest) returns(res) {};
+
+  rpc createVote(createVoteRequest) returns(res) {};
+  rpc getAllVotes(getAllVotesRequest) returns(res) {};
+  rpc getVoteByID(getByIDRequest) returns(res) {};
+  rpc updateVote(updateVoteRequest) returns(res) {};
+  rpc deleteVoteByID(onlyIDRequest) returns(res) {};
+}
+
+// Util
+message getByIDRequest {
+  required string id = 10;
+  optional bool deleted = 20;
+}
+
+message onlyIDRequest {
+  required string id = 10;
+}
+
+message res {
+  optional string data = 10;
+  optional string error = 20;
+}
+
+// Users
+message createUserRequest {
+  required string username = 10;
+}
+
+message getByUsernameRequest {
+  required string username = 10;
+  optional bool deleted = 20;
+}
+
+message getAllUsersRequest {
+}
+
+message updateUserRequest {
+  required string id = 10;
+  optional string username = 20;
+}
+
+// Entries
+message createEntryRequest {
+  required string name = 10;
+  required string meaning = 20;
+  optional string example = 30;
+  optional string tags = 40;
+  optional string image = 50;
+  required string author = 60;
+}
+
+message getAllEntriesRequest {
+  optional string author = 10;
+  optional string deleted = 20;
+}
+
+message updateEntryRequest {
+  required string id = 5;
+  optional string name = 10;
+  optional string meaning = 20;
+  optional string example = 30;
+  optional string tags = 40;
+  optional string image = 50;
+  optional string author = 60;
+}
+
+// Votes
+message createVoteRequest {
+  required string voter = 10;
+  required string entry = 20;
+  required string type = 30;
+}
+
+message getAllVotesRequest {
+  optional string voter = 10;
+  optional string entry = 20;
+  optional string type = 30;
+  optional bool deleted = 40;
+}
+
+message updateVoteRequest {
+  required string id = 5;
+  optional string voter = 10;
+  optional string entry = 20;
+  optional string type = 30;
+}
