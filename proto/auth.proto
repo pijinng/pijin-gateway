@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package pijin;
+
+service Auth {
+  rpc createAuthorization(createAuthorizationRequest) returns(res) {};
+  rpc getAllAuthorizations(getAllAuthorizationsRequest) returns(res) {};
+  rpc getAuthorizationByID(getAuthorizationByIDRequest) returns(res) {};
+  rpc updateAuthorization(updateAuthorizationRequest) returns(res) {};
+  rpc deleteAuthorizationByID(onlyIDRequest) returns(res) {};
+
+  rpc getAuthorizationByUserID(getByUserIDRequest) returns(res) {};
+  rpc validatePasswordWithUserID(validateWithUserIDRequest) returns(res) {};
+}
+
+// Util
+message getByIDRequest {
+  required string id = 10;
+  optional bool deleted = 20;
+}
+
+message onlyIDRequest {
+  required string id = 10;
+}
+
+message res {
+  optional string data = 10;
+  optional string error = 20;
+}
+
+message getByUserIDRequest {
+  required string userID = 10;
+}
+
+// Users
+message createAuthorizationRequest {
+  required string userID = 10;
+  required string password = 20;
+  optional string facebookID = 30;
+}
+
+message getAllAuthorizationsRequest {
+}
+
+message getAuthorizationByIDRequest {
+  optional string id = 10;
+  optional bool deleted = 20;
+  optional string userID = 30;
+  optional string facebookID = 40;
+}
+
+message updateAuthorizationRequest {
+  required string id = 10;
+  optional string password = 20;
+}
+
+message validateWithUserIDRequest {
+  required string userID = 10;
+  required string password = 20;
+}
